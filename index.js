@@ -144,7 +144,7 @@ class Baddie {
 
 function genBaddies() {
     badGuy = new Baddie({
-        size: { x: 1 + Math.random() * 40, y: 1 + Math.random() * 40 },
+        size: { x: 3 + Math.random() * 40, y: 3 + Math.random() * 40 },
         health: 20 + Math.random() * 80,
         color: getRandomColor(),
         velocity: 1 + Math.random() * 8
@@ -153,6 +153,11 @@ function genBaddies() {
 }
 genBaddies()
 
+function checkBaddies() {
+    if (!badGuy) {
+        genBaddies();
+    }
+}
 
 document.onkeydown = function (pressed) {
     if (pressed.key === 'a') {
@@ -234,6 +239,7 @@ function animate() {
     if (badGuy) {
     badGuy.update();    
     }
+    checkBaddies();
     window.requestAnimationFrame(animate);
 }
 

@@ -122,7 +122,10 @@ const pOne = new Player();
 class Baddie {
     constructor({ size, health, color, velocity }) {
         this.size = size
-        this.health = health
+        this.healthMax = health
+        this.healthCurrent = health
+        this.healthbarMax = 30
+        this.healthbarCurrent = 30 * (this.healthCurrent / this.healthMax)
         this.color = color
         this.position = { x: Math.random() * canvas.width, y: Math.random() * canvas.height }
         this.velocity = velocity
@@ -131,6 +134,12 @@ class Baddie {
     draw() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y)
+
+        if (checkPunch()) {
+            this.healthbarCurrent = 30 * (this.healthCurrent / this.healthMax)
+            ctx.fillStyle = 'red';
+            ctx.fillRect(this.position.x, this.position.y - 6, this.healthbarCurrent, 3)
+        }
     }
 
     move() {
@@ -210,9 +219,9 @@ function checkPunch() {
 
 function damageBadGuy() {
     if (checkPunch()) {
-        badGuy.health -= 5
+        badGuy.healthCurrent -= 5
     }
-    if (badGuy.health <= 0) {
+    if (badGuy.healthCurrent <= 0) {
         badGuy = '';
     }
 }
@@ -227,7 +236,7 @@ document.onmousedown = function (click) {
     punchXY = [pointA[0] + directionVector[0], pointA[1] + directionVector[1]];
     checkPunch();
     damageBadGuy();
-    console.log(badGuy.health);
+    console.log(badGuy.healthCurrent);
     setTimeout(() => {
         isPunching = false;
     }, 25)

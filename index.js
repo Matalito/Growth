@@ -10,6 +10,7 @@ let badGuy;
 let clickXY;
 let punchIntervalID;
 let immunity;
+let kills = 0;
 
 window.addEventListener('resize', resizeCanvas);
 function resizeCanvas() {
@@ -79,7 +80,7 @@ class Player {
             this.damageSquareCurrent = this.damageSquareMax * (this.damageCurrent / this.healthMax);
             setTimeout(() => {
                 immunity = false;
-            }, 500)
+            }, 350)
         }
     }
 
@@ -178,7 +179,7 @@ class Baddie {
 
     move() {
         if (!checkPunch()) {
-            this.newXY = moveAtoB(this.position.x, this.position.y, pOne.position.x + 15, pOne.position.y + 15, this.velocity);
+            this.newXY = moveAtoB(this.position.x, this.position.y, pOne.position.x, pOne.position.y, this.velocity);
             this.position.x = this.newXY[0];
             this.position.y = this.newXY[1];
         } else {
@@ -269,6 +270,7 @@ function damageBadGuy() {
     }
     if (badGuy.healthCurrent <= 0) {
         badGuy = '';
+        kills ++;
     }
 }
 
@@ -307,6 +309,10 @@ document.onmouseup = function() {
     clearInterval(punchIntervalID);
 }
 
+document.oncontextmenu = function(e) {
+    e.preventDefault();
+}
+
 function animate() {
     if (pOne.healthCurrent > 0) {
     initialDraw();
@@ -318,7 +324,9 @@ function animate() {
         ctx.fillRect (canvas.width/4, canvas.height/4, canvas.width/2, canvas.height/2);
         ctx.fillStyle = 'limegreen';        
         ctx.font = "80px Trebuchet MS";
-        ctx.fillText('You Died Sucka!',canvas.width/4 + 50, canvas.height/2)
+        ctx.fillText('You Died Sucka!',canvas.width/4 + 50, canvas.height/2);
+        ctx.fillStyle = 'red';
+        ctx.fillText(`Kills: ${kills}`, canvas.width/2 - 100, canvas.height/2 + 90)
     }
 }
 
